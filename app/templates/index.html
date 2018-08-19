@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block content %}
+	<h1>Hi, {{ current_user.username }}!</h1>
+	{% if form %}
+	<form action = '', method = 'post'>
+		{{ form.hidden_tag() }}
+		<p>
+			{{ form.post.label }}<br>
+			{{ form.post(cols = 32, rows = 4) }}<br>
+			{% for e in form.post.errors %}
+			<span style = 'color: red;'>[{{ e }}]</span>
+			{% endfor %}
+		</p>
+		<p>{{ form.submit() }}</p>
+	</form>
+	{% endif %}
+	{% for p in posts %}
+		{{ macros.post(p, p.author) }}<br>
+	{% endfor %}
+	{% if prev_url %}
+	<a href = '{{ prev_url }}'>Back</a>
+	{% endif %}
+	{% if next_url %}
+	<a href = '{{ next_url }}'>Next</a>
+	{% endif %}
+{% endblock %}

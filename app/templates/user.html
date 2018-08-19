@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block content %}
+	<table>
+		<tr valign = 'top'>
+			<td><img src = '{{ user.avatar(128) }}'></td>
+			<td>
+				<h1>User: {{ user.username }}</h1>
+				{% if user.about_me %}
+					<p>{{ user.about_me }}</p>
+				{% endif %}
+				{% if user.last_seen %}
+					<p>Last seen: {{ user.last_seen }}</p>
+				{% endif %}
+				{% if user == current_user %}
+				<a href = "{{ url_for('edit_profile') }}">Edit Profile</a>
+				{% elif not current_user.is_following(user) %}
+				<p><a href = "{{ url_for('follow', username = user.username) }}">
+					Follow</a></p>
+				{% else %}
+				<p><a href = "{{ url_for('unfollow', username = user.username) }}">
+					unfollow</a></p>
+				{% endif %}
+			</td>
+		</tr>
+	</table>
+	<hr>
+	{% for p in posts %}
+	<table>
+		<tr valign = 'top'>
+			{{ macros.post(p, p.author) }}<br>
+		</tr>
+	</table>
+	{% endfor %}
+	{% if prev_url %}
+	<a href = '{{ prev_url }}'>Back</a>
+	{% endif %}
+	{% if next_url %}
+	<a href = '{{ next_url }}'>Next</a>
+	{% endif %}
+{% endblock %}
