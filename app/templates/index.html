@@ -18,7 +18,7 @@
 	</form>
 	{% endif %}
 	{% for p in posts %}
-		{{ macros.post(p, p.author) }}<br>
+		{{ macros.post(p) }}<br>
 	{% endfor %}
 	{% if prev_url %}
 	<a href = '{{ prev_url }}'>Back</a>

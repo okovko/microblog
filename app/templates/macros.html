@@ -1,5 +1,5 @@
-{% macro post(p, user) -%}
-	<td><img src = '{{ user.avatar(36) }}'></td>
+{% macro post(p) -%}
+	<td><img src = '{{ p.author.avatar(36) }}'></td>
 	<td>
 		<a href = "{{ url_for('user', username = p.author.username) }}">
 			{{ p.author.username }}
