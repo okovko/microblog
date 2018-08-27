@@ -10,7 +10,8 @@
 			<a href = "{{ url_for('user', username = p.author.username) }}">
 				{{ p.author.username }}
 			</a>
-			<b>:{{ p.body }}</b>
+			{{ moment(p.timestamp).fromNow() }}:<br>
+			{{ p.body }}
 		</td>
 	</tr>
 </table>
