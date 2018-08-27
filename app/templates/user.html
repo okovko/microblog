@@ -14,6 +14,8 @@
 				{% if user.last_seen %}
 				<p>Last seen: {{ user.last_seen }}</p>
 				{% endif %}
+				<p>{{ user.followers.count() }} followers,
+				   {{ user.followed.count() }} following.</p>
 				{% if user == current_user %}
 				<a href = "{{ url_for('edit_profile') }}">Edit Profile</a>
 				{% elif not current_user.is_following(user) %}
