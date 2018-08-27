@@ -1,9 +1,17 @@
 {% macro post(p) -%}
-	<td><img src = '{{ p.author.avatar(36) }}'></td>
-	<td>
-		<a href = "{{ url_for('user', username = p.author.username) }}">
-			{{ p.author.username }}
-		</a>
-		<b>:{{ p.body }}</b>
-	</td>
+<table class = "table table-hover">
+	<tr>
+		<td width = "70px">
+			<a href = "{{ url_for('user', username = p.author.username) }}">
+				<img src = "{{ p.author.avatar(70) }}"/>
+			</a>
+		</td>
+		<td>
+			<a href = "{{ url_for('user', username = p.author.username) }}">
+				{{ p.author.username }}
+			</a>
+			<b>:{{ p.body }}</b>
+		</td>
+	</tr>
+</table>
 {%- endmacro %}
