@@ -1,0 +1,374 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-09-08 10:47-0700\n"
+"PO-Revision-Date: 2017-09-29 23:25-0700\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: app/__init__.py:19
+msgid "Please log in to access this page."
+msgstr "Por favor ingrese para acceder a esta página."
+
+#: app/forms.py:8 app/forms.py:14 app/forms.py:34
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: app/forms.py:9 app/forms.py:16 app/forms.py:58
+msgid "Password"
+msgstr "Contraseña"
+
+#: app/forms.py:10 app/forms.py:20
+msgid "Remember me"
+msgstr "Recuérdame"
+
+#: app/forms.py:11 app/templates/login.html:5
+msgid "Log in"
+msgstr "Iniciar sesión"
+
+#: app/forms.py:15 app/forms.py:54
+msgid "Email"
+msgstr "Email"
+
+#: app/forms.py:18 app/forms.py:60
+msgid "Repeat Password"
+msgstr "Repetir Contraseña"
+
+#: app/forms.py:21 app/routes.py:62 app/templates/login.html:12
+#: app/templates/register.html:5
+msgid "Register"
+msgstr "Registrarse"
+
+#: app/forms.py:26
+msgid "Please enter a different username"
+msgstr "Por favor ingresa un nombre de usuario distinto"
+
+#: app/forms.py:31
+msgid "Please enter a different email"
+msgstr "Por favor ingrese un correo electrónico diferente"
+
+#: app/forms.py:35
+msgid "About me"
+msgstr "Acerca de mí"
+
+#: app/forms.py:36
+msgid "Save Changes"
+msgstr "Guardar cambios"
+
+#: app/forms.py:46
+msgid "Please use a different username"
+msgstr "Usa un nombre de usuario diferente"
+
+#: app/forms.py:49
+msgid "Say something"
+msgstr "Dí algo"
+
+#: app/forms.py:51
+msgid "Post"
+msgstr "Enviar"
+
+#: app/forms.py:55 app/templates/reset_password_request.html:4
+msgid "Request Password Reset"
+msgstr "Pedir una nueva contraseña"
+
+#: app/forms.py:62 app/templates/reset_password.html:4
+msgid "Reset Password"
+msgstr "Nueva Contraseña"
+
+#: app/routes.py:30
+msgid "Post submitted"
+msgstr "Publicación enviada"
+
+#: app/routes.py:43 app/routes.py:171 app/templates/base.html:30
+msgid "Home"
+msgstr "Inicio"
+
+#: app/routes.py:60
+msgid "You are now registered"
+msgstr "Ahora estás registrado"
+
+#: app/routes.py:72
+msgid "Invalid username or password"
+msgstr "Nombre de usuario o contraseña inválidos"
+
+#: app/routes.py:79
+msgid "Log In"
+msgstr "Iniciar sesión"
+
+#: app/routes.py:103 app/templates/base.html:37
+msgid "Profile"
+msgstr "Perfil"
+
+#: app/routes.py:118
+msgid "Profile saved"
+msgstr "Perfil guardado"
+
+#: app/routes.py:123 app/templates/edit_profile.html:5
+#: app/templates/user.html:21
+msgid "Edit Profile"
+msgstr "Editar Perfil"
+
+#: app/routes.py:131 app/routes.py:147
+#, python-format
+msgid "User %(username)s not found."
+msgstr "El usuario %(username)s no ha sido encontrado."
+
+#: app/routes.py:134
+msgid "Cannot follow self."
+msgstr "No puede seguir a uno mismo."
+
+#: app/routes.py:139
+#, python-format
+msgid "%(username)s followed."
+msgstr "%(username)s seguido."
+
+#: app/routes.py:150
+msgid "Cannot unfollow self."
+msgstr "No puede dejar de seguir a uno mismo."
+
+#: app/routes.py:155
+#, python-format
+msgid "%(username)s unfollowed."
+msgstr "%(username)s no más seguido."
+
+#: app/routes.py:186
+msgid "Check email for instructions to reset password"
+msgstr ""
+"Consulte el correo electrónico para obtener instrucciones para "
+"restablecer la contraseña"
+
+#: app/routes.py:188
+msgid "Password Reset"
+msgstr "Restablecimiento de contraseña"
+
+#: app/routes.py:201
+msgid "Password reset successful"
+msgstr "Restablecimiento de contraseña exitosa"
+
+#: app/templates/404.html:4
+msgid "File Not Found"
+msgstr "Archivo no encontrado"
+
+#: app/templates/500.html:4
+msgid "An unexpected error has occurred"
+msgstr "Ha ocurrido un error inesperado"
+
+#: app/templates/base.html:21
+msgid "Toggle navigation"
+msgstr "Navegación de palanca"
+
+#: app/templates/base.html:26
+msgid "Microblog"
+msgstr "Microblog"
+
+#: app/templates/base.html:31
+msgid "Explore"
+msgstr "Explorar"
+
+#: app/templates/base.html:35
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: app/templates/base.html:38
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: app/templates/base.html:51
+#, python-format
+msgid "%(message)s"
+msgstr "%(message)s"
+
+#: app/templates/index.html:6
+#, python-format
+msgid "Hi, %(username)s!"
+msgstr "¡Hola, %(username)s!"
+
+#: app/templates/index.html:17 app/templates/user.html:40
+msgid "Newer Posts"
+msgstr "Artículos siguientes"
+
+#: app/templates/index.html:22 app/templates/user.html:45
+msgid "Older Posts"
+msgstr "Artículos previos"
+
+#: app/templates/login.html:12
+msgid "New User?"
+msgstr "¿Usuario Nuevo?"
+
+#: app/templates/login.html:14
+msgid "Forgotten password?"
+msgstr "¿Te olvidaste tu contraseña?"
+
+#: app/templates/login.html:15
+msgid "Reset"
+msgstr "Reiniciar"
+
+#: app/templates/macros.html:15
+#, python-format
+msgid "%(username)s %(when)s:"
+msgstr "%(username)s %(when)s:"
+
+#: app/templates/macros.html:19
+#, python-format
+msgid "%(body)s"
+msgstr "%(body)s"
+
+#: app/templates/user.html:10
+#, python-format
+msgid "User: %(username)s"
+msgstr "Usuario: %(username)s"
+
+#: app/templates/user.html:12
+#, python-format
+msgid "%(about_me)s"
+msgstr "%(about_me)s"
+
+#: app/templates/user.html:15
+#, python-format
+msgid "Last seen: %(last_seen)s"
+msgstr "Ultima vez visto: %(last_seen)s"
+
+#: app/templates/user.html:18
+#, python-format
+msgid "%(count)d followers,"
+msgstr "%(count)d seguidores,"
+
+#: app/templates/user.html:19
+#, python-format
+msgid "%(count)d following."
+msgstr "%(count)d siguientes"
+
+#: app/templates/user.html:24
+msgid "Follow"
+msgstr "Seguir"
+
+#: app/templates/user.html:27
+msgid "Unfollow"
+msgstr "Dejar de seguir"
+
+#~ msgid "[Microblog] Reset Your Password"
+#~ msgstr "[Microblog] Nueva Contraseña"
+
+#~ msgid "Remember Me"
+#~ msgstr "Recordarme"
+
+#~ msgid "Sign In"
+#~ msgstr "Ingresar"
+
+#~ msgid "Please use a different username."
+#~ msgstr "Por favor use un nombre de usuario diferente."
+
+#~ msgid "Please use a different email address."
+#~ msgstr "Por favor use una dirección de email diferente."
+
+#~ msgid "Submit"
+#~ msgstr "Enviar"
+
+#~ msgid "Search"
+#~ msgstr "Buscar"
+
+#~ msgid "Your post is now live!"
+#~ msgstr "¡Tu artículo ha sido publicado!"
+
+#~ msgid "Congratulations, you are now a registered user!"
+#~ msgstr "¡Felicitaciones, ya eres un usuario registrado!"
+
+#~ msgid "Check your email for the instructions to reset your password"
+#~ msgstr "Busca en tu email las instrucciones para crear una nueva contraseña"
+
+#~ msgid "Your password has been reset."
+#~ msgstr "Tu contraseña ha sido cambiada."
+
+#~ msgid "Your changes have been saved."
+#~ msgstr "Tus cambios han sido salvados."
+
+#~ msgid "You cannot follow yourself!"
+#~ msgstr "¡No te puedes seguir a tí mismo!"
+
+#~ msgid "You are following %(username)s!"
+#~ msgstr "¡Ahora estás siguiendo a %(username)s!"
+
+#~ msgid "You cannot unfollow yourself!"
+#~ msgstr "¡No te puedes dejar de seguir a tí mismo!"
+
+#~ msgid "You are not following %(username)s."
+#~ msgstr "No estás siguiendo a %(username)s."
+
+#~ msgid "Not Found"
+#~ msgstr "Página No Encontrada"
+
+#~ msgid "Back"
+#~ msgstr "Atrás"
+
+#~ msgid "The administrator has been notified. Sorry for the inconvenience!"
+#~ msgstr "El administrador ha sido notificado. ¡Lamentamos la inconveniencia!"
+
+#~ msgid "%(username)s said %(when)s"
+#~ msgstr "%(username)s dijo %(when)s"
+
+#~ msgid "Welcome to Microblog"
+#~ msgstr "Bienvenido a Microblog"
+
+#~ msgid "Explore"
+#~ msgstr "Explorar"
+
+#~ msgid "Login"
+#~ msgstr "Ingresar"
+
+#~ msgid "Logout"
+#~ msgstr "Salir"
+
+#~ msgid "Newer posts"
+#~ msgstr "Artículos siguientes"
+
+#~ msgid "Older posts"
+#~ msgstr "Artículos previos"
+
+#~ msgid "Click to Register!"
+#~ msgstr "¡Haz click aquí para registrarte!"
+
+#~ msgid "Forgot Your Password?"
+#~ msgstr "¿Te olvidaste tu contraseña?"
+
+#~ msgid "Click to Reset It"
+#~ msgstr "Haz click aquí para pedir una nueva"
+
+#~ msgid "Reset Your Password"
+#~ msgstr "Nueva Contraseña"
+
+#~ msgid "Search Results"
+#~ msgstr "Resultados de Búsqueda"
+
+#~ msgid "Previous results"
+#~ msgstr "Resultados previos"
+
+#~ msgid "Next results"
+#~ msgstr "Resultados próximos"
+
+#~ msgid "User"
+#~ msgstr "Usuario"
+
+#~ msgid "Last seen on"
+#~ msgstr "Última visita"
+
+#~ msgid "%(count)d followers"
+#~ msgstr "%(count)d seguidores"
+
+#~ msgid "%(count)d following"
+#~ msgstr "siguiendo a %(count)d"
+
+#~ msgid "Edit your profile"
+#~ msgstr "Editar tu perfil"
+
