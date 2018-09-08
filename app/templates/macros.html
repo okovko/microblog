@@ -7,10 +7,15 @@
 			</a>
 		</td>
 		<td>
+			{% set user_link %}
 			<a href = "{{ url_for('user', username = p.author.username) }}">
 				{{ p.author.username }}
 			</a>
-			{{ moment(p.timestamp).fromNow() }}:<br>
+			{% endset %}
+			{{ _('%(username)s %(when)s:',
+				username = user_link,
+				when = moment(p.timestamp).fromNow()) }}
+			<br>
 			{{ p.body }}
 		</td>
 	</tr>
