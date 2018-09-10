@@ -1,13 +1,15 @@
 from datetime import datetime
-from flask import g, render_template, flash, redirect, url_for, request
+from flask import g, render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_babel import _, lazy_gettext as _l, get_locale
+from guess_language import guess_language
 from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, \
         ResetPasswordRequestForm, ResetPasswordForm
 from app.email import send_password_reset_email
 from app.models import User, Post
+from app.translate import translate
 
 def is_absolute_url(next_page):
     return url_parse(next_page).netloc != ''
@@ -18,6 +20,13 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
     g.locale = str(get_locale())
+    
+@app.route('/translate', methods = ['POST'])
+@login_required
+def translate_text():
+    return jsonify({'text' : translate(request.form['text'],
+                                       request.form['src_lang'],
+                                       request.form['dst_lang'])})
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/index', methods = ['GET', 'POST'])
@@ -25,7 +34,10 @@ def before_request():
 def index():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body = form.post.data, author = current_user)
+        language = guess_language(form.post.data)
+        if len(language) > 5 or language == 'UNKNOWN':
+            language = ''
+        post = Post(body = form.post.data, author = current_user, language = language)
         db.session.add(post)
         db.session.commit()
         flash(_('Post submitted'))

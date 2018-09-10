@@ -4,6 +4,20 @@
 	{{ super() }}
 	{{ moment.include_moment() }}
 	{{ moment.lang(g.locale) }}
+<script>
+	function translate(srcElem, dstElem, srcLang, dstLang) {
+		$(dstElem).html('<img src = "{{ url_for('static', filename = 'loading.gif') }}">');
+		$.post('/translate', {
+			text : $(srcElem).text(),
+			src_lang : srcLang,
+			dst_lang : dstLang,
+		}).done(function(response) {
+			$(dstElem).text(response['text'])
+		}).fail(function() {
+			$(dstElem).text("{{ _('Error: Could not contact server.') }}");
+		});
+	}
+</script>
 {% endblock %}
 
 {% block title %}
