@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_babel import _
 from guess_language import guess_language
 from werkzeug.urls import url_parse
-from app import app, db
+from app import db
 from app.auth import bp
 from app.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm

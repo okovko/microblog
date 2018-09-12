@@ -1,10 +1,10 @@
 from datetime import datetime
-from flask import g, render_template, flash, redirect, url_for, request, jsonify
+from flask import g, render_template, flash, redirect, url_for, request, jsonify, current_app
 from flask_login import current_user, login_required
 from flask_babel import _, get_locale
 from guess_language import guess_language
 from werkzeug.urls import url_parse
-from app import app, db
+from app import db
 from app.main.forms import EditProfileForm, PostForm
 from app.models import User, Post
 from app.translate import translate
@@ -45,7 +45,7 @@ def index():
     page = request.args.get('page', 1, type = int)
     posts = current_user.followed_posts().order_by(Post.timestamp.desc()).paginate(
             page,
-            app.config['POSTS_PER_PAGE'],
+            current_app.config['POSTS_PER_PAGE'],
             False
     )
     next_url = url_for('main.index', page = posts.next_num) if posts.has_next else None
@@ -66,7 +66,7 @@ def user(username):
     page = request.args.get('page', 1, type = int)
     posts = user.posts.order_by(Post.timestamp.desc()).paginate(
             page,
-            app.config['POSTS_PER_PAGE'],
+            current_app.config['POSTS_PER_PAGE'],
             False,
     )
     next_url = url_for('main.user', username = username, page = posts.next_num) \
@@ -136,7 +136,7 @@ def explore():
     page = request.args.get('page', 1, type = int)
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(
             page,
-            app.config['POSTS_PER_PAGE'],
+            current_app.config['POSTS_PER_PAGE'],
             False,
     )
     next_url = url_for('main.explore', page = posts.next_num) if posts.has_next else None
