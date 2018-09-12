@@ -17,7 +17,7 @@ def is_absolute_url(next_page):
 @bp.route('/register', methods = ['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(username = form.username.data, email = form.email.data)
@@ -25,13 +25,13 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(_('You are now registered'))
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     return render_template('auth/register.html', title = _('Register'), form = form)
 
 @bp.route('/login', methods = ['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username = form.username.data).first()
@@ -41,7 +41,7 @@ def login():
         login_user(user, remember = form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or is_absolute_url(next_page):
-            next_page = url_for('index')
+            next_page = url_for('main.index')
         return redirect(next_page)
     return render_template('auth/login.html', title = _('Log In'), form = form)
 
@@ -49,12 +49,12 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
 @bp.route('/reset_password_request', methods = ['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email = form.email.data).first()
@@ -69,10 +69,10 @@ def reset_password_request():
 @bp.route('/reset_password/<token>', methods = ['GET', 'POST'])
 def reset_password(token):
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     user = User.verify_password_reset_token(token)
     if not user:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user.set_password(form.password.data)
