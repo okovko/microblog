@@ -6,6 +6,44 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import current_app
 from flask_login import UserMixin
 import jwt
+from app.search import add_to_index, remove_from_index, query_index
+
+class SearchableMixin(object):
+    @classmethod
+    def search(cls, exp, page, per_page):
+        ids, total = query_index(cls.__tablename__, exp, page, per_page)
+        if total == 0:
+            return cls.query.filter_by(id = 0), 0
+        when = [(idx, id) for idx, id in enumerate(ids)]
+        results = cls.query.filter(cls.id.in_(ids)).order_by(
+            db.case(when, value = cls.id)
+        )
+        return results, total
+    
+    @classmethod
+    def before_commit(cls, session):
+        session._changes = {
+            'add' : list(session.new),
+            'update' : list(session.dirty),
+            'delete' : list(session.deleted),
+        }
+        
+    @classmethod
+    def after_commit(cls, session):
+        for obj in [v for k, v in session._changes.items() if k in ['add', 'update']]:
+            if isinstance(obj, SearchableMixin):
+                add_to_index(obj.__tablename__, obj)
+        for obj in session._changes['delete']:
+            if isinstance(obj, SearchableMixin):
+                remove_index(obj.__tablename__, obj)
+
+    @classmethod
+    def reindex(cls):
+        for obj in cls.query:
+            add_to_index(cls.__tablename__, obj)
+            
+db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
+db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
 @login.user_loader
 def load_user(id):
@@ -84,7 +122,8 @@ class User(UserMixin, db.Model):
             return None
         return User.query.get(user_id)
 
-class Post(db.Model):
+class Post(SearchableMixin, db.Model):
+    __searchable__ = ['body']
     id = db.Column(db.Integer, primary_key = True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index = True, default = datetime.utcnow)
