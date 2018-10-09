@@ -8,9 +8,11 @@
 		</td>
 		<td>
 			{% set user_link %}
-			<a href = "{{ url_for('main.user', username = p.author.username) }}">
-				{{ p.author.username }}
-			</a>
+			<span class = "user_popup">
+				<a href = "{{ url_for('main.user', username = p.author.username) }}">
+					{{ p.author.username }}
+				</a>
+			</span>
 			{% endset %}
 			{{ _('%(username)s %(when)s:',
 				username = user_link,

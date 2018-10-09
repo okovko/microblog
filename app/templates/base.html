@@ -5,6 +5,73 @@
 	{{ moment.include_moment() }}
 	{{ moment.lang(g.locale) }}
 <script>
+	$(function () {
+		var timer = null;
+		var xhr = null;
+		$('.user_popup').hover(
+			function(event) {
+				// mouse in
+				var elem = $(event.currentTarget);
+				timer = setTimeout(function() {
+					timer = null;
+					xhr = $.ajax('/user/' + elem.first().text().trim() + '/popup').done(
+						function(data) {
+							xhr = null;
+							elem.popover({
+								trigger: 'manual',
+								html: true,
+								animation: false,
+								container: elem,
+								content: data,
+							}).popover('show');
+							flask_moment_render_all();
+						}
+					);
+				}, 1000);
+			},
+			function(event) {
+				// mouse out
+				var elem = $(event.currentTarget);
+				if (timer) {
+					clearTimeout(timer);
+					timer = null;
+				}
+				else if (xhr) {
+					xhr.abort();
+					xhr = null;
+				}
+				else {
+					elem.popover('destroy');
+				}
+			},
+		)
+	});
+	{% if current_user.is_authenticated %}
+	$(function() {
+		var since = 0.0;
+		setInterval(function() {
+			$.ajax("{{ url_for('main.notifications') }}?since=" + since).done(
+				function(notifications) {
+					for (var i = 0; i < notifications.length; i++) {
+						var notif = notifications[i];
+						switch(notif.name) {
+						case 'unread_message_count':
+							update_message_count(notif.data);
+							break;
+						case 'task_progress':
+							update_task_progress(
+								notif.data.task_id,
+								notif.data.progress,
+							);
+							break;
+						}
+						since = notifications[i].timestamp;
+					}
+				}
+			);
+		}, 10000);
+	});
+	{% endif %}
 	function translate(srcElem, dstElem, srcLang, dstLang) {
 		$(dstElem).html('<img src = "{{ url_for('static', filename = 'loading.gif') }}">');
 		$.post('/translate', {
@@ -16,6 +83,10 @@
 		}).fail(function() {
 			$(dstElem).text("{{ _('Error: Could not contact server.') }}");
 		});
+	}
+	function update_message_count(n) {
+		$('#message_count').text(n);
+		$('#message_count').css('visibility', n ? 'visible' : 'hidden');
 	}
 </script>
 {% endblock %}
@@ -60,6 +131,19 @@
 				{% else %}
 				<li><a href="{{ url_for('main.user', username=current_user.username) }}">{{ _('Profile') }}</a></li>
 				<li><a href="{{ url_for('auth.logout') }}">{{ _('Logout') }}</a></li>
+				<li>
+					<a href = "{{ url_for('main.messages') }}">
+						{{ _('Messages') }}
+						{% set new_messages = current_user.get_new_message_count() %}
+						<span
+							id = "message_count"
+							class = "badge"
+							style = "visibility: {% if new_messages %}visible
+									{% else %}hidden{% endif %};">
+							{{ new_messages }}
+						</span>
+					</a>
+				</li>
 				{% endif %}
 			</ul>
 		</div>
