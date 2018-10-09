@@ -19,6 +19,9 @@
 				   {{ _('%(count)d following.', count = user.followed.count()) }}</p>
 				{% if user == current_user %}
 				<a href = "{{ url_for('main.edit_profile') }}">{{ _('Edit Profile') }}</a>
+				{% if not current_user.get_tasks(name = 'export_posts', complete = False) %}
+				<p><a href = "{{ url_for('main.export_posts') }}">{{ _('Export Posts') }}</a></p>
+				{% endif %}
 				{% elif not current_user.is_following(user) %}
 				<p><a href = "{{ url_for('main.follow', username = user.username) }}">
 					{{ _('Follow') }}</a></p>

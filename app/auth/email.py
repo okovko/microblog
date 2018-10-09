@@ -7,12 +7,28 @@ def send_async_email(app, msg):
     with app.app_context():
         mail.send(msg)
 
-def send_email(subject, sender, recipients, body, html):
+def send_email(
+        subject,
+        sender,
+        recipients,
+        body,
+        html,
+        attachments = None,
+        sync = False,
+):
     msg = Message(subject, sender = sender, recipients = recipients)
     msg.body = body
     msg.html = html
-    Thread(target = send_async_email,
-           args = (current_app._get_current_object(), msg)).start()
+    if attachments:
+        for attachment in attachments:
+            msg.attach(*attachment)
+    if sync:
+        mail.send(msg)
+    else:
+        Thread(
+            target = send_async_email,
+            args = (current_app._get_current_object(), msg)
+        ).start()
 
 def send_password_reset_email(user):
     token = user.get_password_reset_token()

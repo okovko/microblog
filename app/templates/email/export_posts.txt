@@ -1,0 +1,5 @@
+{{ user.username }},
+
+The requested posts are attached as an archive.
+
+Microblog

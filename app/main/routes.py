@@ -6,7 +6,7 @@ from guess_language import guess_language
 from werkzeug.urls import url_parse
 from app import db
 from app.main.forms import EditProfileForm, PostForm
-from app.models import User, Post, Message, Notification
+from app.models import User, Post, Message, Notification, Task
 from app.translate import translate
 from app.main import bp
 from app.main.forms import SearchForm, MessageForm
@@ -231,3 +231,13 @@ def notifications():
         'data' : n.get_data(),
         'timestamp' : n.timestamp,
     } for n in notifications])
+
+@bp.route('/export_posts')
+@login_required
+def export_posts():
+    if current_user.get_tasks(name = 'export_posts', complete = False):
+        flash(_('Export already in progress.'))
+    else:
+        current_user.launch_task('export_posts', _('Export in progress.'))
+        db.session.commit()
+    return redirect(url_for('main.user', username = current_user.username))
