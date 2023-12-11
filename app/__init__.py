@@ -7,7 +7,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
-from flask_moment import Moment, _moment
+from flask_moment import Moment, moment as _moment
 from flask_babel import Babel, lazy_gettext as _l
 from elasticsearch import Elasticsearch
 from redis import Redis
@@ -22,6 +22,9 @@ bootstrap = Bootstrap()
 moment = Moment()
 babel = Babel()
 
+def get_locale():
+    return 'en' 
+
 def create_app(config_class = Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -33,7 +36,7 @@ def create_app(config_class = Config):
     bootstrap.init_app(app)
     moment.init_app(app)
     app.jinja_env.globals['moment'] = _moment
-    babel.init_app(app)
+    babel = Babel(app, locale_selector=get_locale)
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
@@ -47,7 +50,9 @@ def create_app(config_class = Config):
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
         if app.config['ELASTICSEARCH_URL'] else None
 
-    app.redis = Redis.from_url(app.config['REDIS_URL'])
+    app.redis = Redis.from_url(app.config['REDIS_URL']) \
+        if app.config['REDIS_URL'] else None
+
     app.task_queue = rq.Queue('microblog-tasks', connection = app.redis)
 
     if not app.debug and not app.testing:
@@ -79,7 +84,3 @@ def create_app(config_class = Config):
         app.logger.info('Microblog')
     
     return app
-    
-@babel.localeselector
-def get_locale():
-    return request.accept_languages.best_match(current_app.config['LANGUAGES'])

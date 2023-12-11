@@ -1,12 +1,12 @@
 from datetime import datetime
 from flask import g, render_template, flash, redirect, url_for, request, jsonify, current_app
+import sqlalchemy
 from flask_login import current_user, login_required
 from flask_babel import _, get_locale
-from guess_language import guess_language
-from werkzeug.urls import url_parse
+from urllib.parse import urlparse as url_parse
 from app import db
 from app.main.forms import EditProfileForm, PostForm
-from app.models import User, Post, Message, Notification, Task
+from app.models import User, Post, Message, Notification, Task, Part
 from app.translate import translate
 from app.main import bp
 from app.main.forms import SearchForm, MessageForm
@@ -45,18 +45,19 @@ def index():
         return redirect(url_for('main.index'))
 
     page = request.args.get('page', 1, type = int)
-    posts = current_user.followed_posts().order_by(Post.timestamp.desc()).paginate(
-            page,
-            current_app.config['POSTS_PER_PAGE'],
-            False
+    parts = db.paginate(
+            sqlalchemy.select(Part).order_by(Part.id),
+            page = page,
+            per_page = current_app.config['POSTS_PER_PAGE'],
+            error_out = False
     )
-    next_url = url_for('main.index', page = posts.next_num) if posts.has_next else None
-    prev_url = url_for('main.index', page = posts.prev_num) if posts.has_prev else None
+    next_url = url_for('main.index', page = parts.next_num) if parts.has_next else None
+    prev_url = url_for('main.index', page = parts.prev_num) if parts.has_prev else None
     return render_template(
             'index.html',
             title = _('Home'),
             form = form,
-            posts = posts.items,
+            parts = parts.items,
             next_url = next_url,
             prev_url = prev_url,
     )
@@ -67,9 +68,9 @@ def user(username):
     user = User.query.filter_by(username = username).first_or_404()
     page = request.args.get('page', 1, type = int)
     posts = user.posts.order_by(Post.timestamp.desc()).paginate(
-            page,
-            current_app.config['POSTS_PER_PAGE'],
-            False,
+            page=page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False,
     )
     next_url = url_for('main.user', username = username, page = posts.next_num) \
         if posts.has_next else None
@@ -137,9 +138,9 @@ def unfollow(username):
 def explore():
     page = request.args.get('page', 1, type = int)
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(
-            page,
-            current_app.config['POSTS_PER_PAGE'],
-            False,
+            page = page,
+            per_page = current_app.config['POSTS_PER_PAGE'],
+            error_out = False,
     )
     next_url = url_for('main.explore', page = posts.next_num) if posts.has_next else None
     prev_url = url_for('main.explore', page = posts.prev_num) if posts.has_prev else None

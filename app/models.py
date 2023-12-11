@@ -171,6 +171,31 @@ class User(UserMixin, db.Model):
             return None
         return User.query.get(user_id)
 
+class Part(SearchableMixin, db.Model):
+    __searchable__ = ['desc']
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(80))
+    desc = db.Column(db.String(240))
+    img_url = db.Column(db.String(120))
+
+    def get_img_url(self):
+        if self.img_url == "":
+            size = 80
+            digest = md5(self.name.lower().encode('utf-8')).hexdigest()
+            return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+        else:
+            return self.img_url
+
+    def __repr__(self):
+        return '<Part {}>'.format(self.desc)
+
+class LegacyPart(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    quantity = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<LegacyPart {}'.format(self.id)
+
 class Post(SearchableMixin, db.Model):
     __searchable__ = ['body']
     id = db.Column(db.Integer, primary_key = True)
