@@ -1,9 +1,10 @@
 from datetime import datetime
 from time import time
 from hashlib import md5
-from app import db, login
+from app import db, LegacyDB, NewDB, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import current_app
+from sqlalchemy.orm import declarative_base
 from flask_login import UserMixin
 from app.search import add_to_index, remove_from_index, query_index
 import jwt, json, redis, rq
@@ -54,7 +55,7 @@ followers = db.Table('followers',
         db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
         )
 
-class User(UserMixin, db.Model):
+class User(UserMixin, db.Model, NewDB):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(64), index = True, unique = True)
     email = db.Column(db.String(120), index = True, unique = True)
@@ -171,12 +172,14 @@ class User(UserMixin, db.Model):
             return None
         return User.query.get(user_id)
 
-class Part(SearchableMixin, db.Model):
+class Part(SearchableMixin, db.Model, NewDB):
     __searchable__ = ['desc']
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(80))
     desc = db.Column(db.String(240))
     img_url = db.Column(db.String(120))
+
+    legacy_parts = db.relationship('LegacyPart', backref = 'part', lazy = 'dynamic')
 
     def get_img_url(self):
         if self.img_url == "":
@@ -189,14 +192,14 @@ class Part(SearchableMixin, db.Model):
     def __repr__(self):
         return '<Part {}>'.format(self.desc)
 
-class LegacyPart(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+class LegacyPart(db.Model, LegacyDB):
+    id = db.Column(db.Integer, db.ForeignKey('part.id'), primary_key = True)
     quantity = db.Column(db.Integer)
 
     def __repr__(self):
-        return '<LegacyPart {}'.format(self.id)
+        return '<LegacyPart {}>'.format(self.id)
 
-class Post(SearchableMixin, db.Model):
+class Post(SearchableMixin, db.Model, NewDB):
     __searchable__ = ['body']
     id = db.Column(db.Integer, primary_key = True)
     body = db.Column(db.String(140))
@@ -207,7 +210,7 @@ class Post(SearchableMixin, db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
-class Message(db.Model):
+class Message(db.Model, NewDB):
     id = db.Column(db.Integer, primary_key = True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -217,7 +220,7 @@ class Message(db.Model):
     def __repr__(self):
         return '<Message> {}>'.format(self.body)
 
-class Notification(db.Model):
+class Notification(db.Model, NewDB):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(128), index = True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -230,7 +233,7 @@ class Notification(db.Model):
     def __repr__(self):
         return '<Notification> {}>'.format(self.payload_json)
 
-class Task(db.Model):
+class Task(db.Model, NewDB):
     id = db.Column(db.String(36), primary_key = True)
     name = db.Column(db.String(128), index = True)
     description = db.Column(db.String(128))

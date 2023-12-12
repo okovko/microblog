@@ -3,6 +3,9 @@ from logging.handlers import SMTPHandler, RotatingFileHandler
 from flask import Flask, request, current_app
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import declarative_base
+from sqlalchemy import create_engine 
+from sqlalchemy.orm.session import Session, sessionmaker
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
@@ -12,7 +15,10 @@ from flask_babel import Babel, lazy_gettext as _l
 from elasticsearch import Elasticsearch
 from redis import Redis
 
+NewDB = declarative_base()
+LegacyDB = declarative_base()
 db = SQLAlchemy()
+session = ()
 migrate = Migrate()
 login = LoginManager()
 login.login_view = 'auth.login'
@@ -28,9 +34,15 @@ def get_locale():
 def create_app(config_class = Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
-    
+
+    db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+    legacy_db_engine = create_engine(app.config['SQLALCHEMY_LEGACY_DATABASE_URI'])
+    maker = sessionmaker()
+    maker.configure(binds={LegacyDB: legacy_db_engine, NewDB: db_engine})
+    session = maker()
+
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, render_as_batch=True)
     login.init_app(app)
     mail.init_app(app)
     bootstrap.init_app(app)

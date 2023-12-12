@@ -35,17 +35,20 @@
 </table>
 {%- endmacro %}
 
-{% macro part(p) -%}
+{% macro part(p, q) -%}
 <tr>
   <td width = "80px">
     {% if p.img_url != '' %}
-    <img src = "{{ url_for('static', filename = p.get_img_url()) }}"/>
+    <img src = "{{ url_for('static', filename = p.get_img_url() ) }}"/>
     {% else %}
     <img src = "{{ p.get_img_url() }}"/>
     {% endif %}
     <span id = "part_name{{ p.id }}">{{ p.name }}</span>
     <br>
     <span id = "part_id{{ p.id }}">#{{ p.id }}</span>
+  </td>
+  <td>
+    <span id = "part_quantity{{ p.id }}">{{ q.quantity }}</span>
   </td>
   <td>
     <span id = "part_desc{{ p.id }}">{{ p.desc }}</span>

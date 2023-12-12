@@ -1,12 +1,13 @@
 from datetime import datetime
 from flask import g, render_template, flash, redirect, url_for, request, jsonify, current_app
 import sqlalchemy
+from sqlalchemy import func
 from flask_login import current_user, login_required
 from flask_babel import _, get_locale
 from urllib.parse import urlparse as url_parse
 from app import db
 from app.main.forms import EditProfileForm, PostForm
-from app.models import User, Post, Message, Notification, Task, Part
+from app.models import User, Post, Message, Notification, Task, Part, LegacyPart
 from app.translate import translate
 from app.main import bp
 from app.main.forms import SearchForm, MessageForm
@@ -45,21 +46,18 @@ def index():
         return redirect(url_for('main.index'))
 
     page = request.args.get('page', 1, type = int)
-    parts = db.paginate(
-            sqlalchemy.select(Part).order_by(Part.id),
-            page = page,
-            per_page = current_app.config['POSTS_PER_PAGE'],
-            error_out = False
-    )
-    next_url = url_for('main.index', page = parts.next_num) if parts.has_next else None
-    prev_url = url_for('main.index', page = parts.prev_num) if parts.has_prev else None
+    sql = sqlalchemy.select(Part, LegacyPart).join(LegacyPart)
+    parts, legacy_parts = [[Part(id=x.id, name=x.name, desc=x.desc, img_url=x.img_url), LegacyPart(id=x.id, quantity=y.quantity)] for x,y in db.session.execute(sql)]
+
+    # next_url = url_for('main.index', page = parts.next_num) if parts.has_next else None
+    # prev_url = url_for('main.index', page = parts.prev_num) if parts.has_prev else None
+
     return render_template(
             'index.html',
             title = _('Home'),
             form = form,
-            parts = parts.items,
-            next_url = next_url,
-            prev_url = prev_url,
+            parts = parts,
+            legacy_parts = legacy_parts,
     )
 
 @bp.route('/user/<username>')
@@ -84,6 +82,14 @@ def user(username):
             next_url = next_url,
             prev_url = prev_url,
     )
+
+@bp.route('/add_part', methods = ['GET', 'POST'])
+@login_required
+def add_part(name, desc, img_url):
+  id = legacy_db.session.query(func.max(Part.id)).scalar()
+  p = Part(id=id, name=name, desc=desc, img_url=img_url)
+  legacy_db.session.add(p)
+  legacy_db.session.commit()
 
 @bp.route('/edit_profile', methods = ['GET', 'POST'])
 @login_required
